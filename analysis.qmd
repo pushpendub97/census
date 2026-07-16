@@ -2,4 +2,37 @@
 title: "Analyzing US Census Data"
 author: "Pushpendu Biswas"
 format: html
+execute:
+  echo: false
 ---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(tidycensus)
+library(sf)
+```
+
+```{r}
+#| message: false
+income_tx <- get_acs(
+  geography = "county",
+  variables = "B19013_001",
+  state = "TX",
+  year = 2020,
+  geometry = TRUE
+)
+```
+
+```{r}
+income_tx |>
+  ggplot(aes(fill = estimate)) +
+  geom_sf() +
+  scale_fill_viridis_c(labels = scales::label_dollar()) +
+  theme_void() +
+  labs(
+    title = "Median Household Income in Texas Counties",
+    fill = "Median Income",
+    caption = "Source: 2020 American Community Survey (ACS), US Census Bureau"
+  )
+```
